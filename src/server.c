@@ -71,7 +71,7 @@ int main(){
       exit( EXIT_FAILURE );
    
    }
-   
+  
    if( (n_recived = recvfrom( UDP, &enter, sizeof( enter ), 0 , 0, 0 ) ) < 0 ){
    
       perror( "Errore ricezione pacchetto UDP" );

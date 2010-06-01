@@ -1,4 +1,4 @@
-/*< [MD5_Brute_Forcer] -A programm created to decrypt an hash with brute forcing->
+/*< [RA-Remote_Administrator-] -A programm created to control the own remote system->
     Copyright (C) <2010>  <D4RKN355-H4CK>
 
     This program is free software: you can redistribute it and/or modify
