@@ -18,21 +18,21 @@ BINM = mkaccess
 all:
 	gcc -o $(BINS) $(SERVER) $(CFLAGS)
 	gcc -o $(BINC) $(CLIENT) $(CFLAGS)
-	gcc -o $(BINM) $(MKACCESS) $(CFLAGS)
+#	gcc -o $(BINM) $(MKACCESS) $(CFLAGS)
 
 clean:
-	rm -rf ~/.RA_Logging
+	#rm -rf ~/.RA_Logging
 	rm -rf $(BINS)
 	rm -rf $(BINC)
-	rm -rf $(BINM)
+	#rm -rf $(BINM)
 	rm -rf /usr/local/bin/$(BINS)
 	rm -rf /usr/local/bin/$(BINC)
-	rm -rf /usr/local/bin/$(BINM)
+	#rm -rf /usr/local/bin/$(BINM)
 
 
 install: all
 	cp -rf $(BINS) /usr/local/bin/
 	cp -rf $(BINC) /usr/local/bin/
-	cp -rf $(BINM) /usr/local/bin/
+	#cp -rf $(BINM) /usr/local/bin/
 
 #DO NOT DELETE!

@@ -14,8 +14,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
-#include <openssl/md5.h>
-#include <RA_mkaccess.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -30,100 +28,55 @@
 #define MAXLINE 1000
 #define STOP "stop_execution"
 #define REPLY 10000
+#define RED \e[41m
 
-int main(int argc, char *argv[]){
-   
-   int TCP, UDP, n_sent, n_recived;
-   DATA access;
+int main(){
+
+   int TCP, n_read;
+   char buffer[ MAXLINE ], reply[ REPLY ];
    struct sockaddr_in server;
-   char reply, instruction[ MAXLINE ], output[ REPLY ];
-   
-   if( argc != 3 ){
-   
-      _usage( argv[ 0 ] );
-      exit( EXIT_FAILURE );
-      
-   }
    
    _print_header();
    
-   if( ( TCP = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 ){
+   if( ( TCP = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
+      die();
    
-      perror( "Errore creazione socket TCP" );
-      exit( EXIT_FAILURE );
+   sock_init( &server, PORT, inet_addr( IP ) );
+    
+   if( connect( TCP, ( struct sockaddr * ) &server, sizeof( server ) ) < 0 )
+      die();
    
-   }
+   while( 1 ){
    
-   if( ( UDP = socket( AF_INET, SOCK_DGRAM, 0 ) ) < 0 ){
-   
-      perror( "Errore creazione socket UDP" );
-      exit( EXIT_FAILURE );
-   
-   }
-  
-   _Md5( argv[ 2 ], &access );
-   strcpy( access.username, argv[ 1 ] );
-   server.sin_family = AF_INET;
-   server.sin_port = htons( PORT );
-   server.sin_addr.s_addr = inet_addr( IP );
-   
-   if( ( n_sent = sendto( UDP, &access, sizeof( access ), 0, ( struct sockaddr *) &server, sizeof( server ) ) ) < 0 ){
-   
-      perror( "Errore invio pacchetto UDP" );
-      exit( EXIT_FAILURE );
-   
-   }
-   
-   if( ( n_recived = recvfrom( UDP, &reply, sizeof( reply ), 0, 0, 0 ) ) < 0 ){
-   
-      perror( "Errore ricezione pacchetto UDP" );
-      exit( EXIT_FAILURE );
-   
-   }
-   
-   if( reply == 'C' ){
-   
-      printf( "Errore autenticazione\n" );
-      exit( EXIT_FAILURE );
-   
-   }
-   
-   if( connect( TCP, (struct sockaddr *) &server, sizeof( server ) ) < 0 ){
-   
-      perror( "Errore connessione TCP" );
-      exit( EXIT_FAILURE );
-   
-   }
-   
-   printf( "Shell> " );
-   scanf( "%s", instruction );
-   
-   while( strcmp( instruction, STOP ) != 0 ){
-   
-      if( ( n_sent = send( TCP, instruction, sizeof( instruction ), 0 ) ) < 0 ){
+      switch( fork() ){
       
-         perror( "Errore invio dati" );
-         exit( EXIT_FAILURE );
+         case -1:
+            die();
+            break;
+         
+         case 0:
+            while( ( n_read = recv( TCP, reply, sizeof( reply ), 0 ) ) > 0 ){
+            
+               printf( "%s\n", reply );
+               memset( reply, 0x0, strlen( reply ) );
+               reply[ REPLY - 1 ] = '\0';
+            
+            }
+            break;
+         
+         default:
+            memset( buffer, 0x0, strlen( buffer ) );
+            printf( "RED>" );
+            fgets( buffer, sizeof( buffer ), stdin );
+            buffer[ MAXLINE - 1 ] = '\0';
+            send( TCP, buffer, sizeof( buffer ), 0 );
+            break;
       
       }
-      
-      if( ( n_recived = recv( TCP, output, sizeof( output ), 0 ) ) < 0 ){
-      
-         perror( "Errore ricezione dati" );
-         exit( EXIT_FAILURE );
-      
-      }
-      
-      printf( "%s\n", output );
-      memset( instruction, 0, strlen( instruction ) );
-      memset( output, 0 , strlen( instruction ) );
-      printf( "Shell> " );
-      scanf( "%s", instruction );
    
    }
    
    close( TCP );
-   
    return 0;
-   
+
 }

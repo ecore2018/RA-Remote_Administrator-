@@ -14,10 +14,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
-#include <RA_mkaccess.h>
 #include <stdio.h>
 #include <string.h>
 #include <openssl/md5.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 void _print_header(){
 
@@ -30,33 +32,9 @@ void _print_header(){
 
 }
 
-void _Md5( const char *stringa, DATA *final ){
-
-   MD5_CTX md5;
-   int x, y;
-   unsigned char buffer[ 1000 ];
-   
-   MD5_Init (&md5);
-   MD5_Update (&md5, (const unsigned char *) stringa, strlen(stringa));
-   MD5_Final ( buffer, &md5);
-   
-   for( x = 0, y = 0; x < 16; x++, y += 2 )
-      sprintf(  &final->password[ y ] , "%02x", buffer[ x ] );
-
-}
-
-int datacmp( DATA *first, DATA *second ){
-
-   if( ( strcmp( first->username, second->username ) == 0 ) && ( strcmp( first->password, second->password ) == 0 ) )
-      return 0;
-   else
-      return -1;
-      
-}
-
 void init_instruction( char *instruction ){
 
-   strcat( instruction, " > temp" );
+   strcat( instruction, " >> temp" );
 
 }
 
@@ -64,5 +42,20 @@ void _usage( const char *name){
 
    printf( "Usage: \"%s < username > < password >\"\n", name );
    exit( EXIT_FAILURE );
+
+}
+
+void die(){
+
+   perror( "Client error" );
+   exit( EXIT_FAILURE );
+
+}
+
+void sock_init( struct sockaddr_in *server, long int ip, int port ){
+
+   server->sin_family = AF_INET;
+   server->sin_port = htons( port );
+   server->sin_addr.s_addr = ip;
 
 }
