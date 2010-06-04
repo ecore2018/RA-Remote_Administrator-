@@ -26,13 +26,13 @@
 #define PORT 6667
 #define IP "127.0.0.1"
 #define MAXLINE 1000
-#define STOP "stop_execution"
+#define STOP "stop_e"
 #define REPLY 10000
 #define RED \e[41m
 
 int main(){
 
-   int TCP, n_read;
+   int TCP, n_read, n_sent;
    char buffer[ MAXLINE ], reply[ REPLY ];
    struct sockaddr_in server;
    
@@ -48,33 +48,30 @@ int main(){
    
    while( 1 ){
    
-      switch( fork() ){
+      printf( "-" );
+      memset( buffer, 0x0, sizeof( buffer ) );
+      fgets( buffer, sizeof( buffer ), stdin );
+      buffer[ strlen( buffer ) - 1 ] = '\0';
       
-         case -1:
-            die();
-            break;
-         
-         case 0:
-            while( ( n_read = recv( TCP, reply, sizeof( reply ), 0 ) ) > 0 ){
-            
-               printf( "%s\n", reply );
-               memset( reply, 0x0, strlen( reply ) );
-               reply[ REPLY - 1 ] = '\0';
-            
-            }
-            break;
-         
-         default:
-            memset( buffer, 0x0, strlen( buffer ) );
-            printf( "RED>" );
-            fgets( buffer, sizeof( buffer ), stdin );
-            buffer[ MAXLINE - 1 ] = '\0';
-            send( TCP, buffer, sizeof( buffer ), 0 );
-            break;
+      if( !strcmp( buffer, STOP ) ){
+      
+         printf( "Exiting...\n" );
+         close( TCP );
+         exit( EXIT_SUCCESS );
       
       }
+      
+      if( ( n_sent = send( TCP, buffer, sizeof( buffer ), 0 ) ) < 0 )
+         die();
+      
+      printf( "String sent correctly\n" );
+      
+      if( ( n_read = recv( TCP, reply, sizeof( reply ), 0 ) ) < 0 )
+         die();
+      
+      printf( "Correct execution\n" );
    
-   }
+   }   
    
    close( TCP );
    return 0;

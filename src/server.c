@@ -54,7 +54,7 @@ int main(){
    
    while( 1 ){
    
-      if( ( read( TCP, cmd, sizeof( cmd ) ) ) < 0 )
+      if( ( recv( TCP, cmd, sizeof( cmd ), 0 ) ) < 0 )
          die();
       
       memset( new_cmd, 0x0, sizeof( new_cmd ) );
@@ -65,8 +65,9 @@ int main(){
          die();
          
       fgets( reply, sizeof( reply ), fp );
+      reply[ strlen( reply ) - 1 ] = '\0';
       
-      if( write( TCP, reply, sizeof( reply ) ) < 0 )
+      if( send( TCP, reply, sizeof( reply ), 0 ) < 0 )
          die();
       
       fclose( fp );
