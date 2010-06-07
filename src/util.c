@@ -32,12 +32,6 @@ void _print_header(){
 
 }
 
-void init_instruction( char *instruction ){
-
-   strcat( instruction, " >> temp" );
-
-}
-
 void _usage( const char *name){
 
    printf( "Usage: \"%s < username > < password >\"\n", name );

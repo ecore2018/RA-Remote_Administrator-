@@ -41,7 +41,7 @@ int main(){
    if( ( TCP = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
       die();
    
-   sock_init( &server, PORT, inet_addr( IP ) );
+   sock_init( &server, inet_addr( IP ), PORT );
     
    if( connect( TCP, ( struct sockaddr * ) &server, sizeof( server ) ) < 0 )
       die();
@@ -69,7 +69,7 @@ int main(){
       if( ( n_read = recv( TCP, reply, sizeof( reply ), 0 ) ) < 0 )
          die();
       
-      printf( "Correct execution\n" );
+      printf( "%s\n", reply );
    
    }   
    
