@@ -73,7 +73,7 @@ int main(){
          die();
       
       fclose( fp );
-      unlink( file );
+      remove( file );
       
       }
    

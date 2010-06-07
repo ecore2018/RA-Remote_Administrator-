@@ -9,9 +9,9 @@ LIBS = -lssl
 CFLAGS = ${LIBS} -DVERSION=\"${VERSION}\" -I./include
 
 SERVER = src/server.c src/util.c
-BINS = server
+BINS = RA_SERVER
 CLIENT = src/client.c src/util.c
-BINC = client
+BINC = RA_CLIENT
 MKACCESS = Mkaccess/RA_mkaccess.c src/util.c
 BINM = mkaccess
 
