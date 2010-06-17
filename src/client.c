@@ -40,7 +40,7 @@ int main( int argc, char *argv[] ){
    if( ( TCP = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
       die();
    
-   sock_init( &server, inet_addr( argv[ 0 ] ), PORT );
+   sock_init( &server, inet_addr( argv[ 1 ] ), PORT );
     
    if( connect( TCP, ( struct sockaddr * ) &server, sizeof( server ) ) < 0 )
       die();
