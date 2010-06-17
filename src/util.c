@@ -34,7 +34,7 @@ void _print_header(){
 
 void _usage( const char *name){
 
-   printf( "Usage: \"%s < username > < password >\"\n", name );
+   printf( "Usage: \"%s <IP_TO_CONNECT>\"\n", name );
    exit( EXIT_FAILURE );
 
 }

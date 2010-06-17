@@ -26,13 +26,13 @@
 #define BACKLOG 3
 #define MAXLINE 1000
 #define PORT 6667
-#define REPLY 10000
+#define REPLY 1000000
 
 int main(){
    
    int TCP, LIST;
    struct sockaddr_in cli;
-   char reply[ REPLY ], buff, cmd[ MAXLINE ];
+   char reply[ REPLY ], buff[ MAXLINE ], cmd[ MAXLINE ], sendx[ REPLY ];
    FILE *fp;
    
    _print_header();
@@ -61,13 +61,14 @@ int main(){
       
       memset( reply, 0x0, sizeof( reply ) );
       
-      while( fread( &buff, 1, 1, fp ) > 0 ){   
+      while( fgets( buff, sizeof( buff ), fp ) > 0 )
+         strcat( sendx, buff );
+         
+      if( send( TCP, sendx , sizeof( sendx ), 0 ) < 0 )
+         die();
       
-         if( send( TCP, &buff , sizeof( buff ), 0 ) < 0 )
-            die();
-      
-      }
-      fclose( fp );
+      memset( sendx, 0x0, sizeof( sendx ) );
+      pclose( fp );
       
       }
    

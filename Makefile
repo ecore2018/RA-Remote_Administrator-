@@ -1,9 +1,6 @@
 # RA-Remote Administrator-
 
-VERSION = 0.0.1
-
-# includes and libs
-LIBS = -lssl
+VERSION = "1.0 Alpha"
 
 # flags
 CFLAGS = ${LIBS} -DVERSION=\"${VERSION}\" -I./include
