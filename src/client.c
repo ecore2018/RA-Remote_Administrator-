@@ -29,7 +29,7 @@
 int main( int argc, char *argv[] ){
 
    int TCP, n_read, n_sent;
-   char buffer[ MAXLINE ], reply[ REPLY ];
+   char buffer[ MAXLINE ], reply[ MAXLINE ];
    struct sockaddr_in server;
    
    if( argc != 2 )
