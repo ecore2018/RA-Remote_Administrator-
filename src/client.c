@@ -25,6 +25,7 @@
 
 #define PORT 6667
 #define MAXLINE 1000
+#define IP "127.0.0.1"
 
 int main( int argc, char *argv[] ){
 
@@ -40,7 +41,7 @@ int main( int argc, char *argv[] ){
    if( ( TCP = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
       die();
    
-   sock_init( &server, inet_addr( argv[ 1 ] ), PORT );
+   sock_init( &server, inet_addr( IP ), PORT );
     
    if( connect( TCP, ( struct sockaddr * ) &server, sizeof( server ) ) < 0 )
       die();
