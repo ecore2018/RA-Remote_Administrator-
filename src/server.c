@@ -67,7 +67,7 @@ int main(){
       memset( sendx, 0x0, sizeof( sendx ) );
       memset( buff, 0x0, sizeof( buff ) );
       memset( cmd, 0x0, sizeof( cmd ) );
-      fclose( fp );
+      pclose( fp );
       
       }
    

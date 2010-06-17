@@ -52,6 +52,9 @@ int main( int argc, char *argv[] ){
          memset( reply, 0x0, sizeof( reply ) );
          fgets( buffer, sizeof( buffer ), stdin );
          buffer[ strlen( buffer ) ] = '\0';
+         
+         if( !strcmp( buffer, "RA_exit\n" ) )
+            break;
       
          if( ( n_sent = send( TCP, buffer, sizeof( buffer ), 0 ) ) < 0 )
             die();

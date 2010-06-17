@@ -20,15 +20,16 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <util.h>
 
 void _print_header(){
 
-   printf( "#####   #\n"    
+   printf( "%s#####   #\n"    
            " #  #   ##\n"   
            " # #    # #\n" 
            " ###    ####\tRemote_Administrator\n"
           " #  ##  #   #\n"
-         " ##  ## #   ##\n" );
+         " ##  ## #   ##\n\n%s", RED, WHITE );
 
 }
 
