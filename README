@@ -17,3 +17,14 @@ or error, you can write at: federicogerardi94@gmail.com.
 Thanks for attention.
 
 D4RKN355-H4CK
+
+
+__________________________________________________________________________
+I've reviewed the code and I decided to not implement the client cause I've tought
+that It's not useful reimplementig programs which already exist.
+So, this new version, hasn't the client.
+I've reimplementig the way to communicate with the shell, avoiding to use
+pipes to management the data communicaction with the socket.
+I've corrected the code and now It's more ordered!
+
+D4RKN355-H4CK

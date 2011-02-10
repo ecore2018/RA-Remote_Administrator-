@@ -18,6 +18,7 @@
 #include <string.h>
 #include <openssl/md5.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <util.h>
@@ -33,16 +34,9 @@ void _print_header(){
 
 }
 
-void _usage( const char *name){
-
-   printf( "Usage: \"%s <IP_TO_CONNECT>\"\n", name );
-   exit( EXIT_FAILURE );
-
-}
-
 void die(){
 
-   perror( "Client error" );
+   perror( "Execution error" );
    exit( EXIT_FAILURE );
 
 }
@@ -53,4 +47,28 @@ void sock_init( struct sockaddr_in *server, long int ip, int port ){
    server->sin_port = htons( port );
    server->sin_addr.s_addr = ip;
 
+}
+
+int testroot()
+{
+   if( getuid() != 0 )
+   	return -1;
+   else
+   	return 0;
+}
+
+/*It'll be useful...*/
+void _Md5( char *first, char *final ){
+
+   MD5_CTX md5;
+   char temp[ 100 ];
+   int x, y;
+   
+   MD5_Init (&md5);
+   MD5_Update (&md5, (const unsigned char *) first, strlen( first ) );
+   MD5_Final ( temp, &md5);
+   
+   for( x = 0, y = 0; x < 16; x++, y += 2 )
+      sprintf(  &temp[ y ] , "%02x", final[ x ] );
+   
 }

